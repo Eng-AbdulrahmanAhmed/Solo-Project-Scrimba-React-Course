@@ -10,14 +10,15 @@ type QuestionProps = {
     correct_answer: string;
     incorrect_answers: string[];
     allAnswers?: string[]; 
-    selectedAnswers: string;
+    selectedAnswer: string;
 }
 
 export default function QuizScreen() {
 
     const [isGameOver , setIsGameOver] = useState<boolean>(false)
+    const [newGame , setNewGame] = useState<boolean>(false)
     const [questions, setQuestions] = useState<QuestionProps[]>([])
-    // const [isSelected , setIsSelected] = useState<boolean>(false)
+
     useEffect(() => {  
         fetch("https://opentdb.com/api.php?amount=10")
             .then(res => res.json())
@@ -33,25 +34,36 @@ export default function QuizScreen() {
                     }
                 });
                 setQuestions(formatted)
+                setNewGame(false)
             })
-    },[]) 
+    },[newGame]) 
     
     function handleClick(questionText: string, answer: string) {
-    setQuestions(prev =>
-        prev.map(q =>
-            q.question === questionText
-                ? { ...q, selectedAnswer: answer }
-                : q
-        )
-    );
-}
+        setQuestions(prev =>
+            prev.map(q =>
+                q.question === questionText
+                    ? { ...q, selectedAnswer: answer }
+                    : q
+            )
+        );
+    }
+    
+    function submitAnswers(){
+        setIsGameOver(true)
+    }
+
+    function playAgain(){
+        setIsGameOver(false)
+        setNewGame(true)
+
+    }
 
     return (
         <>
             <section className="quiz-screen">
-                
+
                 <svg className="blob1" width="158" height="141" viewBox="0 0 158 141" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M62.5096 81.3947C34.2214 50.8508 -3.58201 21.7816 0.272833 -19.6933C4.5395 -65.599 38.9541 -105.359 81.5192 -123.133C121.897 -139.994 169.136 -130.256 204.922 -105.149C235.047 -84.0141 235.923 -43.8756 245.241 -8.27104C255.27 30.0508 281.621 70.8106 259.601 103.779C236.639 138.159 188.091 143.432 147.031 138.768C111.418 134.723 86.8506 107.677 62.5096 81.3947Z" fill="#FFFAD1"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M62.5096 81.3947C34.2214 50.8508 -3.58201 21.7816 0.272833 -19.6933C4.5395 -65.599 38.9541 -105.359 81.5192 -123.133C121.897 -139.994 169.136 -130.256 204.922 -105.149C235.047 -84.0141 235.923 -43.8756 245.241 -8.27104C255.27 30.0508 281.621 70.8106 259.601 103.779C236.639 138.159 188.091 143.432 147.031 138.768C111.418 134.723 86.8506 107.677 62.5096 81.3947Z" fill="#FFFAD1"/>
                 </svg>
 
                 <svg className="blob2" width="148" height="118" viewBox="0 0 148 118" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -59,12 +71,16 @@ export default function QuizScreen() {
                 </svg>
 
                 <div className="questions-container">
-                    <Questions questions={questions} handleClick={handleClick} />
+                    <Questions questions={questions} handleClick={handleClick}  isGameOver={isGameOver}/>
                 </div>
 
                 {!isGameOver ?
-                    <button className="submit-button">Submit Answers</button> : ""
-                }
+                    <button className="submit-button" onClick={submitAnswers}>Submit Answers</button> : 
+                    <div className="score-container">
+                        <h1>You scored 3/5 correct answers</h1>
+                        <button className="submit-button" onClick={playAgain}>Play Again</button> 
+                    </div>
+                } 
             </section>
         </>
     )

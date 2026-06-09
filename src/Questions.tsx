@@ -6,9 +6,10 @@ import type {JSX} from 'react'
 type QuestionsProps = {
     questions: QuestionProps[];
     handleClick: (questionText: string, answer: string) => void;
+    isGameOver: boolean;
 };
 
-export default function Questions({questions, handleClick, }: QuestionsProps):JSX.Element{
+export default function Questions({questions, handleClick,isGameOver }: QuestionsProps):JSX.Element{
 
     const questionElements: JSX.Element[] = questions.map((question): JSX.Element => {
         
@@ -21,8 +22,11 @@ export default function Questions({questions, handleClick, }: QuestionsProps):JS
                     {question.allAnswers.map((answer: string) => {
                         return (
                             <button key={answer} className={clsx("answer",{
-                                selected: question.selectedAnswer === answer
-                            })} onClick={() => handleClick(question.question, answer)} >{answer}</button> 
+                                selected: question.selectedAnswer === answer,
+                                correct: isGameOver && answer === question.correct_answer,
+                                wrong: isGameOver && question.selectedAnswer === answer && answer !== question.correct_answer,
+                                // correct: checkCorrectAnswers,
+                            })} onClick={() => !isGameOver && handleClick(question.question, answer)}  >{answer}</button> 
                         )
                     })}
                 </div>
