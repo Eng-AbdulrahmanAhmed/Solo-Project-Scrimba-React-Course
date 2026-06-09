@@ -26,7 +26,7 @@ export default function Questions({questions, handleClick,isGameOver }: Question
                                 correct: isGameOver && answer === question.correct_answer,
                                 wrong: isGameOver && question.selectedAnswer === answer && answer !== question.correct_answer,
                                 // correct: checkCorrectAnswers,
-                            })} onClick={() => !isGameOver && handleClick(question.question, answer)}  >{answer}</button> 
+                            })} onClick={() => !isGameOver && handleClick(question.question, answer)} disabled={isGameOver} >{answer}</button> 
                         )
                     })}
                 </div>

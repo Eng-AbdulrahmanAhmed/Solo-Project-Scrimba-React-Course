@@ -18,6 +18,7 @@ export default function QuizScreen() {
     const [isGameOver , setIsGameOver] = useState<boolean>(false)
     const [newGame , setNewGame] = useState<boolean>(false)
     const [questions, setQuestions] = useState<QuestionProps[]>([])
+    let correctAnswersCount = 0
 
     useEffect(() => {  
         fetch("https://opentdb.com/api.php?amount=10")
@@ -35,6 +36,7 @@ export default function QuizScreen() {
                 });
                 setQuestions(formatted)
                 setNewGame(false)
+                correctAnswersCount = 0
             })
     },[newGame]) 
     
@@ -47,15 +49,28 @@ export default function QuizScreen() {
             )
         );
     }
-    
+    function countCorrectAnswers():number {
+        questions.map((prev:QuestionProps)=>{
+            prev.allAnswers.map((answer)=>{
+                console.log(prev.correct_answer)
+                if(prev.selectedAnswer === answer && prev.selectedAnswer === prev.correct_answer){
+                    correctAnswersCount++;
+                }
+            })
+        })
+        console.log(correctAnswersCount)
+        return correctAnswersCount
+    }
     function submitAnswers(){
         setIsGameOver(true)
+        countCorrectAnswers()
     }
 
     function playAgain(){
-        setIsGameOver(false)
         setNewGame(true)
-
+        setIsGameOver(false)
+        
+        correctAnswersCount = 0;
     }
 
     return (
@@ -71,16 +86,18 @@ export default function QuizScreen() {
                 </svg>
 
                 <div className="questions-container">
-                    <Questions questions={questions} handleClick={handleClick}  isGameOver={isGameOver}/>
+                    <Questions questions={questions} handleClick={handleClick}  isGameOver={isGameOver} />
                 </div>
 
-                {!isGameOver ?
-                    <button className="submit-button" onClick={submitAnswers}>Submit Answers</button> : 
+                {!isGameOver &&
+                    <button className="submit-button" onClick={submitAnswers}>Submit Answers</button>
+                } 
+                {isGameOver &&
                     <div className="score-container">
-                        <h1>You scored 3/5 correct answers</h1>
+                        <h1>You scored {countCorrectAnswers()} correct answers</h1>
                         <button className="submit-button" onClick={playAgain}>Play Again</button> 
                     </div>
-                } 
+                }
             </section>
         </>
     )

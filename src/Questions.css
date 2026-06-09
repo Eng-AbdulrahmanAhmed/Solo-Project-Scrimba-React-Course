@@ -34,10 +34,13 @@ hr{
     background-color: #DBDEF5;
 }
 .answer.wrong{
-    background-color: rgb(221, 69, 69);
-    color: #f5f5f5;
+    background-color: #F8BCBC;
 }
 .answer.correct{
     background-color: #94D7A2;
     border: none;
+}
+.answer:disabled{
+    opacity: 0.7;
+    cursor: not-allowed;
 }
