@@ -52,13 +52,11 @@ export default function QuizScreen() {
     function countCorrectAnswers():number {
         questions.map((prev:QuestionProps)=>{
             prev.allAnswers.map((answer)=>{
-                console.log(prev.correct_answer)
                 if(prev.selectedAnswer === answer && prev.selectedAnswer === prev.correct_answer){
                     correctAnswersCount++;
                 }
             })
         })
-        console.log(correctAnswersCount)
         return correctAnswersCount
     }
     function submitAnswers(){
