@@ -2,43 +2,42 @@ import { useState  , useEffect} from 'react';
 import Questions from './Questions';
 import './QuizScreen.css'
 
-type QuestionProps = {
+export type QuestionProps = {
     category: string;
     type: string;
     difficulty: string;
     question: string;
     correct_answer: string;
     incorrect_answers: string[];
-    allAnswers?: string[]; 
-    selectedAnswer: string;
+    allAnswers: string[]; 
+    selectedAnswer?: string;
 }
 
 export default function QuizScreen() {
 
     const [isGameOver , setIsGameOver] = useState<boolean>(false)
-    const [newGame , setNewGame] = useState<boolean>(false)
+    const [gameCount , setGameCount] = useState<number>(0)
     const [questions, setQuestions] = useState<QuestionProps[]>([])
-    let correctAnswersCount = 0
 
     useEffect(() => {  
         fetch("https://opentdb.com/api.php?amount=10")
             .then(res => res.json())
             .then(data => {
-                const formatted:QuestionProps[] = data.results.map((q:Omit<QuestionProps , "allAnswers">)=>{
-                    const allChoices = [...q.incorrect_answers]
-                    const randomIndex = Math.floor(Math.random() * (allChoices.length + 1))
-                    allChoices.splice(randomIndex , 0 ,q.correct_answer)
-                    return {
-                        ...q,
-                        allAnswers: allChoices,  
-                        selectedAnswer: undefined, 
-                    }
-                });
-                setQuestions(formatted)
-                setNewGame(false)
-                correctAnswersCount = 0
+                if (data.results) {
+                    const formatted:QuestionProps[] = data.results.map((q:Omit<QuestionProps , "allAnswers">)=>{
+                        const allChoices = [...q.incorrect_answers]
+                        const randomIndex = Math.floor(Math.random() * (allChoices.length + 1))
+                        allChoices.splice(randomIndex , 0 ,q.correct_answer)
+                        return {
+                            ...q,
+                            allAnswers: allChoices,  
+                            selectedAnswer: undefined, 
+                        }
+                    });
+                    setQuestions(formatted)
+                }
             })
-    },[newGame]) 
+    },[gameCount]) 
     
     function handleClick(questionText: string, answer: string) {
         setQuestions(prev =>
@@ -49,26 +48,21 @@ export default function QuizScreen() {
             )
         );
     }
+    
     function countCorrectAnswers():number {
-        questions.map((prev:QuestionProps)=>{
-            prev.allAnswers.map((answer)=>{
-                if(prev.selectedAnswer === answer && prev.selectedAnswer === prev.correct_answer){
-                    correctAnswersCount++;
-                }
-            })
-        })
-        return correctAnswersCount
+        return questions.reduce((count, q) => {
+            return (q.selectedAnswer === q.correct_answer) ? count + 1 : count;
+        }, 0);
     }
+
     function submitAnswers(){
         setIsGameOver(true)
-        countCorrectAnswers()
     }
 
     function playAgain(){
-        setNewGame(true)
+        setGameCount(prev => prev + 1)
         setIsGameOver(false)
-        
-        correctAnswersCount = 0;
+        setQuestions([]) // clear previous questions
     }
 
     return (
@@ -87,12 +81,12 @@ export default function QuizScreen() {
                     <Questions questions={questions} handleClick={handleClick}  isGameOver={isGameOver} />
                 </div>
 
-                {!isGameOver &&
+                {questions.length > 0 && !isGameOver &&
                     <button className="submit-button" onClick={submitAnswers}>Submit Answers</button>
                 } 
                 {isGameOver &&
                     <div className="score-container">
-                        <h1>You scored {countCorrectAnswers()} correct answers</h1>
+                        <h1>You scored {countCorrectAnswers()} / {questions.length} correct answers</h1>
                         <button className="submit-button" onClick={playAgain}>Play Again</button> 
                     </div>
                 }

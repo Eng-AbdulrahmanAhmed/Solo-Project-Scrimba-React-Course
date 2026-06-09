@@ -1,46 +1,73 @@
-.question-text{
-    font-family: 'Karla' , sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 24px;
+.question {
+    margin-bottom: 20px;
     text-align: left;
-    color: #293264;
 }
-hr{
-    width: 100%;
-    border: 01px solid #DBDEF0;
-    margin: 20px 0;
-}
-.answer{
-    border: none;
+
+.question-text {
+    font-family: 'Karla', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.4;
     color: #293264;
+    margin-bottom: 15px;
+}
+
+.answers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.answer {
     background-color: transparent;
     border: 1px solid #4D5B9E;
-    font-size: 16px;
-    padding: 5px 8px;
-    border-radius: 8px;
-    margin: 15px 7px;
-    min-width: 100px;
+    color: #293264;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 22px;
+    border-radius: 12px;
     cursor: pointer;
-    padding: 5px 7px;
-    /* background-color: #D6DBF5;
-    border-color: #D6DBF5; */
+    transition: all 0.2s ease;
 }
-.answer:hover{
-    background-color: #DBDEF5;
+
+.answer:hover:not(:disabled) {
+    background-color: #D6DBF5;
+    border-color: #D6DBF5;
 }
-.answer.selected{
-    background-color: #DBDEF5;
+
+.answer.selected {
+    background-color: #D6DBF5;
+    border-color: #D6DBF5;
 }
-.answer.wrong{
-    background-color: #F8BCBC;
-}
-.answer.correct{
+
+.answer.correct {
     background-color: #94D7A2;
-    border: none;
+    border-color: #94D7A2;
+    color: #293264;
 }
-.answer:disabled{
-    opacity: 0.7;
-    cursor: not-allowed;
+
+.answer.wrong {
+    background-color: #F8BCBC;
+    border-color: #F8BCBC;
+    opacity: 0.8;
+    color: #293264;
+}
+
+.answer:disabled {
+    cursor: default;
+}
+
+/* Dim unselected, non-correct answers after submission */
+.answer:disabled:not(.correct):not(.wrong) {
+    opacity: 0.5;
+    border-color: #4D5B9E;
+}
+
+hr {
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid #DBDEF0;
+    margin-top: 15px;
 }
