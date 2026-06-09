@@ -28,37 +28,3 @@
     margin-top: 20px;
     border-radius: 8px;
 }
-.question-text{
-    font-family: 'Karla' , sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 24px;
-    text-align: left;
-    color: #293264;
-}
-hr{
-    width: 100%;
-    border: 01px solid #DBDEF0;
-    margin: 20px 0;
-}
-.answer{
-    border: none;
-    color: #293264;
-    background-color: transparent;
-    border: 1px solid #4D5B9E;
-    font-size: 16px;
-    padding: 5px 8px;
-    border-radius: 8px;
-    margin: 15px 7px;
-    min-width: 100px;
-    cursor: pointer;
-    padding: 5px 7px;
-}
-.answer:hover{
-    background-color: #DBDEF0;
-}
-.answer.correct{
-    background-color: #94D7A2;
-    border: none;
-}
