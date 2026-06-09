@@ -19,11 +19,10 @@ export default function Questions({questions, handleClick, }: QuestionsProps):JS
                 <p className="question-text">{question.question}</p>
                 <div className="answers">
                     {question.allAnswers.map((answer: string) => {
-                        // const answerIsCorrect = (question.correct_answer == answer)
                         return (
                             <button key={answer} className={clsx("answer",{
                                 selected: question.selectedAnswer === answer
-                            })} /*className={props.isChoosen}*/  onClick={() => handleClick(question.question, answer)} >{answer}</button> 
+                            })} onClick={() => handleClick(question.question, answer)} >{answer}</button> 
                         )
                     })}
                 </div>
